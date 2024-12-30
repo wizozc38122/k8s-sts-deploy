@@ -1,0 +1,28 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+    name: rabbitmq
+    namespace: rabbitmq-system
+spec:
+  service:
+    type: NodePort
+  override:
+    service:
+      spec:
+        ports:
+          - name: management
+            protocol: TCP
+            port: 15672
+            targetPort: 15672
+            nodePort: <nodePort>
+          - name: amqp
+            protocol: TCP
+            port: 5672
+            targetPort: 5672
+            nodePort: <nodePort>
+          - appProtocol: prometheus.io/metrics
+            name: metrics
+            port: 15692
+            protocol: TCP
+            targetPort: 15692
+            nodePort: <nodePort>

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ printf "%s-redpanda" (.Values.service | lower) | quote }}
+  namespace: {{ .Values.namespace | lower | quote }}
+  labels:
+    app: {{ printf "%s-redpanda" (.Values.service | lower) | quote }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ printf "%s-redpanda" (.Values.service | lower) | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ printf "%s-redpanda" (.Values.service | lower) | quote }}
+    spec:
+      containers:
+      - name: redpanda
+        image: docker.redpanda.com/redpandadata/console:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: KAFKA_BROKERS
+          value: {{ printf "%s-kafka-bootstrap:9092" (.Values.service | lower) | quote }}
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /overview
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /overview
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /overview
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 6

@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kafka-exporter
+  namespace: cattle-monitoring-system
+spec:
+  selector:
+    matchLabels:
+      prometheus.io/scrape: "true"
+      app.kubernetes.io/name: kafka-exporter
+  endpoints:
+  - port: metrics
+    interval: 15s
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - kafka

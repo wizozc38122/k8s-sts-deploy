@@ -1,0 +1,40 @@
+# 忽略版本控制系統相關的目錄
+.git/
+.gitignore
+.gitattributes
+
+# 忽略編譯相關的檔案
+*.swp
+*.bak
+*.tmp
+*.log
+*.out
+.DS_Store
+
+# 忽略本地設定檔
+.idea/
+.vscode/
+*.iml
+
+# 忽略 Chart 測試和快取檔案
+test/
+cache/
+charts/
+tmpcharts/
+artifacts/
+
+# 忽略文檔和其他非必要的檔案
+*.md
+README.*
+LICENSE
+CHANGELOG.*
+*.txt
+
+# 忽略 CI/CD 相關的檔案
+*.yml
+*.yaml
+*.sh
+
+# 忽略特定檔案或目錄
+example-values.yaml
+values-dev.yaml

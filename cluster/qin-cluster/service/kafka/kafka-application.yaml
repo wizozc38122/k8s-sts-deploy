@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-application
+spec:
+  project: qin-app-project
+  source:
+    repoURL: <argo_repo_url>
+    targetRevision: HEAD
+    path: 'cluster/qin-cluster/service/kafka/chart'
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    name: qin-cluster
+  syncPolicy:
+    syncOptions:
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true

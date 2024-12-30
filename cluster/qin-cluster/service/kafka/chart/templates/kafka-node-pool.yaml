@@ -1,0 +1,39 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: {{ .Values.service | lower | quote }}
+  namespace: {{ .Values.namespace | lower | quote }}
+  labels:
+    strimzi.io/cluster: {{ .Values.service | lower | quote }}
+    app.kubernetes.io/name: {{ .Values.service | lower | quote }}
+spec:
+  replicas: {{- if .Values.nodePorts }} {{ len .Values.nodePorts | default 1 }} {{- else }} 1 {{- end }}
+  roles:
+    - controller
+    - broker
+{{- if .Values.resources }}
+  resources:
+{{ toYaml .Values.resources | indent 4 }}
+{{- end }}
+  storage:
+    type: jbod
+    volumes:
+      - id: 0
+        type: persistent-claim
+        size: {{ .Values.volumesSize }}
+        deleteClaim: false
+        kraftMetadata: shared
+  template:
+    pod:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: strimzi.io/cluster
+                      operator: In
+                      values:
+                        - {{ .Values.service | lower | quote }}
+                topologyKey: kubernetes.io/hostname
+              weight: 1

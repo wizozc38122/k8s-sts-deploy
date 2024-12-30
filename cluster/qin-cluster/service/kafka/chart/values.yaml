@@ -1,0 +1,23 @@
+# 看要抽什麼變數
+namespace: kafka
+service: kafka
+
+version: <3.8>
+metadataVersion: <3.8-IV0>
+bootstrapPort: <bootstrapPort>
+nodePorts:
+  - <nodePort>
+  - <nodePort>
+  - <nodePort>
+
+resources:
+  requests:
+    memory: 2Gi
+    cpu: "500m"
+  limits:
+    memory: 6Gi
+    cpu: "1"
+
+volumesSize: 50Gi
+
+redpandaPort: <nodePort>
